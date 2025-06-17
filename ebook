@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Twoje imię po japońsku!</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 20px;
+      border: 2px solid #ccc;
+      border-radius: 12px;
+      text-align: center;
+    }
+    input {
+      padding: 10px;
+      width: 80%;
+      font-size: 1rem;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <h2>Wpisz swoje imię:</h2>
+  <input type="text" id="nameInput" placeholder="Np. Łukasz">
+  <br>
+  <button onclick="convertName()">Pokaż po japońsku!</button>
+  <div class="result" id="result"></div>
+
+  <script>
+    const katakanaMap = {
+      "a": "ア", "ą": "オン", "b": "バ", "c": "ツ", "ć": "チ", "d": "ダ", "e": "エ", "ę": "エン", "f": "フ", "g": "ガ",
+      "h": "ハ", "i": "イ", "j": "ジ", "k": "カ", "l": "ル", "ł": "ル", "m": "マ", "n": "ン", "ń": "ニ", "o": "オ", "ó": "オー",
+      "p": "パ", "r": "ラ", "s": "サ", "ś": "シ", "t": "タ", "u": "ウ", "w": "ワ", "y": "イ", "z": "ザ", "ź": "ジ", "ż": "ジュ"
+    };
+
+    function convertToKatakana(name) {
+      name = name.toLowerCase();
+      let katakana = "";
+      for (let char of name) {
+        katakana += katakanaMap[char] || char;
+      }
+      return katakana;
+    }
+
+    function convertName() {
+      const input = document.getElementById("nameInput").value.trim();
+      if (!input) {
+        document.getElementById("result").innerHTML = "Proszę wpisz imię.";
+        return;
+      }
+      const katakana = convertToKatakana(input);
+      const romaji = input.replace(/ł/g, "l").replace(/ś/g, "si").replace(/ć/g, "ci").replace(/ń/g, "ni").replace(/ż|ź/g, "zi").replace(/ó/g, "o").replace(/ę/g, "e").replace(/ą/g, "o");
+      document.getElementById("result").innerHTML =
+        `<p><strong>Katakana:</strong> ${katakana}</p>
+         <p><strong>Romaji:</strong> ${romaji.charAt(0).toUpperCase() + romaji.slice(1)}</p>`;
+    }
+  </script>
+</body>
+</html>
