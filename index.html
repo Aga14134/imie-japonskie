@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polish to Japanese Name Converter</title>
+    <title>Sprawdź jak twoje imię brzmi po japońsku</title>
     <style>
         * {
             margin: 0;
@@ -12,40 +13,97 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #604CC3 0%, #FF6600 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Dekoracyjne elementy dla dzieci */
+        .star {
+            position: absolute;
+            color: #F5F5F5;
+            font-size: 2rem;
+            animation: twinkle 2s infinite alternate;
+        }
+        
+        .star:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .star:nth-child(2) { top: 20%; right: 15%; animation-delay: 0.5s; }
+        .star:nth-child(3) { top: 70%; left: 5%; animation-delay: 1s; }
+        .star:nth-child(4) { bottom: 15%; right: 10%; animation-delay: 1.5s; }
+        .star:nth-child(5) { top: 50%; left: 2%; animation-delay: 0.3s; }
+        .star:nth-child(6) { bottom: 30%; right: 3%; animation-delay: 0.8s; }
+
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.2); }
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            background: #F5F5F5;
+            border-radius: 30px;
             padding: 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
             max-width: 600px;
             width: 100%;
             text-align: center;
+            position: relative;
+            border: 5px solid #604CC3;
+        }
+
+        .container::before {
+            content: '🌸';
+            position: absolute;
+            top: -15px;
+            left: 30px;
+            font-size: 2rem;
+            background: #F5F5F5;
+            padding: 0 10px;
+        }
+
+        .container::after {
+            content: '⭐';
+            position: absolute;
+            top: -15px;
+            right: 30px;
+            font-size: 2rem;
+            background: #F5F5F5;
+            padding: 0 10px;
         }
 
         h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 2rem;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #604CC3;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            line-height: 1.2;
         }
 
-        .subtitle {
-            color: #666;
+        .flags {
+            font-size: 3rem;
             margin-bottom: 30px;
-            font-size: 1.1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .arrow {
+            color: #FF6600;
+            font-size: 2.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(0); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(5px); }
         }
 
         .input-group {
@@ -54,144 +112,196 @@
 
         label {
             display: block;
-            margin-bottom: 10px;
-            color: #333;
-            font-weight: 600;
+            margin-bottom: 15px;
+            color: #604CC3;
+            font-weight: bold;
+            font-size: 1.3rem;
         }
 
         input[type="text"] {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 1.1rem;
+            padding: 20px;
+            border: 4px solid #604CC3;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.8);
+            background: white;
+            color: #604CC3;
+            font-weight: bold;
         }
 
         input[type="text"]:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #FF6600;
+            box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.2);
+            transform: scale(1.02);
+        }
+
+        input[type="text"]::placeholder {
+            color: #bbb;
+            font-style: italic;
         }
 
         .convert-btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: linear-gradient(45deg, #FF6600, #604CC3);
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 1.1rem;
+            padding: 20px 40px;
+            border-radius: 25px;
+            font-size: 1.3rem;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
             margin-bottom: 30px;
+            box-shadow: 0 8px 20px rgba(255, 102, 0, 0.3);
         }
 
         .convert-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(255, 102, 0, 0.4);
+        }
+
+        .convert-btn:active {
+            transform: translateY(0) scale(1);
         }
 
         .results {
             display: none;
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 15px;
-            padding: 25px;
+            background: white;
+            border-radius: 25px;
+            padding: 30px;
             margin-top: 20px;
-            animation: fadeIn 0.5s ease;
+            animation: slideIn 0.6s ease;
+            border: 4px solid #604CC3;
+            position: relative;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .results::before {
+            content: '✨';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            background: white;
+            padding: 0 15px;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .result-item {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #604CC3, #FF6600);
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 8px 20px rgba(96, 76, 195, 0.3);
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
         }
 
         .result-label {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 5px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .katakana {
-            font-size: 2rem;
-            color: #667eea;
+            font-size: 2.5rem;
             font-weight: bold;
-            margin: 10px 0;
+            margin: 15px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
         }
 
         .romaji {
-            font-size: 1.3rem;
-            color: #764ba2;
+            font-size: 1.5rem;
             font-style: italic;
-        }
-
-        .example {
-            background: rgba(118, 75, 162, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            color: #555;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .footer {
             margin-top: 30px;
-            color: #666;
-            font-size: 0.9rem;
+            color: #604CC3;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .emoji-decoration {
+            font-size: 1.5rem;
+            margin: 0 10px;
         }
 
         @media (max-width: 600px) {
             .container {
-                padding: 20px;
+                padding: 25px;
+                margin: 10px;
             }
             
             h1 {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
             }
             
             .katakana {
+                font-size: 2rem;
+            }
+
+            .flags {
+                font-size: 2.5rem;
+            }
+
+            .star {
                 font-size: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Dekoracyjne gwiazdki -->
+    <div class="star">⭐</div>
+    <div class="star">✨</div>
+    <div class="star">🌟</div>
+    <div class="star">💫</div>
+    <div class="star">⭐</div>
+    <div class="star">✨</div>
+
     <div class="container">
-        <h1>🇵🇱 ➜ 🇯🇵 Name Converter</h1>
-        <p class="subtitle">Konwertuj polskie imiona na japońskie katakana i romaji</p>
+        <h1>Sprawdź jak twoje imię brzmi po japońsku!</h1>
         
-        <div class="example">
-            <strong>Przykłady:</strong> Agnieszka → アグニェシカ (Agunieshika), Oliwia → オリビア (Oribia), Jula → ユラ (Yura)
+        <div class="flags">
+            🇵🇱 <span class="arrow">➜</span> 🇯🇵
         </div>
 
         <div class="input-group">
-            <label for="polishName">Wpisz polskie imię:</label>
-            <input type="text" id="polishName" placeholder="np. Agnieszka, Tomasz, Anna..." maxlength="50">
+            <label for="polishName">Wpisz swoje imię:</label>
+            <input type="text" id="polishName" placeholder="Twoje imię..." maxlength="50">
         </div>
 
-        <button class="convert-btn" onclick="convertName()">Konwertuj na japoński</button>
+        <button class="convert-btn" onclick="convertName()">🎌 Zmień na japoński! 🎌</button>
 
         <div id="results" class="results">
             <div class="result-item">
-                <div class="result-label">Katakana:</div>
+                <div class="result-label">🌸 Katakana (japońskie pismo):</div>
                 <div id="katakana" class="katakana"></div>
             </div>
             <div class="result-item">
-                <div class="result-label">Romaji:</div>
+                <div class="result-label">🗾 Romaji (jak się czyta):</div>
                 <div id="romaji" class="romaji"></div>
             </div>
         </div>
 
         <div class="footer">
-            Konwersja oparta na japońskiej fonetyce i systemie katakana
+            <span class="emoji-decoration">🌸</span>
+            Twoje imię w japońskim stylu!
+            <span class="emoji-decoration">🌸</span>
         </div>
     </div>
 
@@ -347,7 +457,7 @@
         function convertName() {
             const input = document.getElementById('polishName').value.trim().toLowerCase();
             if (!input) {
-                alert('Proszę wpisać imię!');
+                alert('Wpisz swoje imię! 😊');
                 return;
             }
 
@@ -431,18 +541,14 @@
             }
         });
 
-        // Dodaj przykłady do testowania
-        document.addEventListener('DOMContentLoaded', function() {
-            const examples = ['Agnieszka', 'Oliwia', 'Jula', 'Tomasz', 'Anna', 'Piotr', 'Julka', 'Oliwier'];
-            const input = document.getElementById('polishName');
-            
-            input.addEventListener('focus', function() {
-                if (!this.value) {
-                    this.placeholder = examples[Math.floor(Math.random() * examples.length)];
-                }
-            });
+        // Dodaj pozytywne komunikaty dla dzieci
+        document.getElementById('polishName').addEventListener('input', function() {
+            if (this.value.length > 0) {
+                this.style.borderColor = '#FF6600';
+            } else {
+                this.style.borderColor = '#604CC3';
+            }
         });
     </script>
 </body>
 </html>
-
