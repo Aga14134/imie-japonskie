@@ -28,29 +28,92 @@
       margin-top: 20px;
       font-size: 1.2rem;
     }
+    .kana-display {
+      font-size: 2rem;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
   <h2>Wpisz swoje imię:</h2>
-  <input type="text" id="nameInput" placeholder="Np. Łukasz">
+  <input type="text" id="nameInput" placeholder="Np. Agnieszka">
   <br>
   <button onclick="convertName()">Pokaż po japońsku!</button>
   <div class="result" id="result"></div>
 
   <script>
-    const katakanaMap = {
-      "a": "ア", "ą": "オン", "b": "バ", "c": "ツ", "ć": "チ", "d": "ダ", "e": "エ", "ę": "エン", "f": "フ", "g": "ガ",
-      "h": "ハ", "i": "イ", "j": "ジ", "k": "カ", "l": "ル", "ł": "ル", "m": "マ", "n": "ン", "ń": "ニ", "o": "オ", "ó": "オー",
-      "p": "パ", "r": "ラ", "s": "サ", "ś": "シ", "t": "タ", "u": "ウ", "w": "ワ", "y": "イ", "z": "ザ", "ź": "ジ", "ż": "ジュ"
+    const syllableMap = {
+      "a": { kana: "ア", roma: "a" },
+      "b": { kana: "ブ", roma: "bu" },
+      "c": { kana: "ク", roma: "ku" },
+      "cz": { kana: "チ", roma: "chi" },
+      "d": { kana: "ド", roma: "do" },
+      "e": { kana: "エ", roma: "e" },
+      "f": { kana: "フ", roma: "fu" },
+      "g": { kana: "グ", roma: "gu" },
+      "h": { kana: "ハ", roma: "ha" },
+      "i": { kana: "イ", roma: "i" },
+      "j": { kana: "ジ", roma: "ji" },
+      "k": { kana: "カ", roma: "ka" },
+      "l": { kana: "ル", roma: "ru" },
+      "ł": { kana: "ウ", roma: "u" },
+      "m": { kana: "ム", roma: "mu" },
+      "n": { kana: "ン", roma: "n" },
+      "ń": { kana: "ニ", roma: "ni" },
+      "o": { kana: "オ", roma: "o" },
+      "ó": { kana: "オー", roma: "ō" },
+      "p": { kana: "プ", roma: "pu" },
+      "r": { kana: "ル", roma: "ru" },
+      "s": { kana: "ス", roma: "su" },
+      "sz": { kana: "シ", roma: "shi" },
+      "ś": { kana: "シ", roma: "shi" },
+      "t": { kana: "ト", roma: "to" },
+      "u": { kana: "ウ", roma: "u" },
+      "w": { kana: "ウ", roma: "u" },
+      "y": { kana: "イ", roma: "i" },
+      "z": { kana: "ズ", roma: "zu" },
+      "ź": { kana: "ジ", roma: "ji" },
+      "ż": { kana: "ジュ", roma: "ju" },
+      "ni": { kana: "ニ", roma: "ni" },
+      "gn": { kana: "ニェ", roma: "nye" },
+      "rz": { kana: "ジ", roma: "ji" },
+      "ch": { kana: "ヒ", roma: "hi" }
     };
 
-    function convertToKatakana(name) {
+    function convertToKanaAndRomaji(name) {
       name = name.toLowerCase();
-      let katakana = "";
-      for (let char of name) {
-        katakana += katakanaMap[char] || char;
+      let kana = "";
+      let roma = "";
+      let kanaBreakdown = [];
+      let i = 0;
+      while (i < name.length) {
+        let found = false;
+        // Spróbuj dopasować 2-znakową sekwencję
+        if (i + 1 < name.length) {
+          let pair = name.slice(i, i + 2);
+          if (syllableMap[pair]) {
+            kana += syllableMap[pair].kana;
+            roma += syllableMap[pair].roma;
+            kanaBreakdown.push(pair + " → " + syllableMap[pair].kana);
+            i += 2;
+            found = true;
+            continue;
+          }
+        }
+        // Spróbuj pojedynczy znak
+        let single = name.charAt(i);
+        if (syllableMap[single]) {
+          kana += syllableMap[single].kana;
+          roma += syllableMap[single].roma;
+          kanaBreakdown.push(single + " → " + syllableMap[single].kana);
+        } else {
+          kana += single;
+          roma += single;
+          kanaBreakdown.push(single + " → ?");
+        }
+        i++;
       }
-      return katakana;
+      return { kana, roma, kanaBreakdown };
     }
 
     function convertName() {
@@ -59,11 +122,11 @@
         document.getElementById("result").innerHTML = "Proszę wpisz imię.";
         return;
       }
-      const katakana = convertToKatakana(input);
-      const romaji = input.replace(/ł/g, "l").replace(/ś/g, "si").replace(/ć/g, "ci").replace(/ń/g, "ni").replace(/ż|ź/g, "zi").replace(/ó/g, "o").replace(/ę/g, "e").replace(/ą/g, "o");
+      const { kana, roma, kanaBreakdown } = convertToKanaAndRomaji(input);
       document.getElementById("result").innerHTML =
-        `<p><strong>Katakana:</strong> ${katakana}</p>
-         <p><strong>Romaji:</strong> ${romaji.charAt(0).toUpperCase() + romaji.slice(1)}</p>`;
+        `<p><strong>Katakana:</strong> <span class="kana-display">${kana}</span></p>
+         <p><strong>Romaji:</strong> ${roma.charAt(0).toUpperCase() + roma.slice(1)}</p>
+         <p><strong>Rozbicie znaków:</strong><br>${kanaBreakdown.join('<br>')}</p>`;
     }
   </script>
 </body>
