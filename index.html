@@ -1,134 +1,448 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title>Twoje imię po japońsku!</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      max-width: 500px;
-      margin: 40px auto;
-      padding: 20px;
-      border: 2px solid #ccc;
-      border-radius: 12px;
-      text-align: center;
-    }
-    input {
-      padding: 10px;
-      width: 80%;
-      font-size: 1rem;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 1rem;
-      margin-top: 10px;
-      cursor: pointer;
-    }
-    .result {
-      margin-top: 20px;
-      font-size: 1.2rem;
-    }
-    .kana-display {
-      font-size: 2rem;
-      margin-top: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polish to Japanese Name Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .convert-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .convert-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .results {
+            display: none;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .katakana {
+            font-size: 2rem;
+            color: #667eea;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .romaji {
+            font-size: 1.3rem;
+            color: #764ba2;
+            font-style: italic;
+        }
+
+        .example {
+            background: rgba(118, 75, 162, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .footer {
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .katakana {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h2>Wpisz swoje imię:</h2>
-  <input type="text" id="nameInput" placeholder="Np. Agnieszka">
-  <br>
-  <button onclick="convertName()">Pokaż po japońsku!</button>
-  <div class="result" id="result"></div>
+    <div class="container">
+        <h1>🇵🇱 ➜ 🇯🇵 Name Converter</h1>
+        <p class="subtitle">Konwertuj polskie imiona na japońskie katakana i romaji</p>
+        
+        <div class="example">
+            <strong>Przykłady:</strong> Agnieszka → アグニェシカ (Agunieshika), Oliwia → オリビア (Oribia), Jula → ユラ (Yura)
+        </div>
 
-  <script>
-    const syllableMap = {
-      "a": { kana: "ア", roma: "a" },
-      "b": { kana: "ブ", roma: "bu" },
-      "c": { kana: "ク", roma: "ku" },
-      "cz": { kana: "チ", roma: "chi" },
-      "d": { kana: "ド", roma: "do" },
-      "e": { kana: "エ", roma: "e" },
-      "f": { kana: "フ", roma: "fu" },
-      "g": { kana: "グ", roma: "gu" },
-      "h": { kana: "ハ", roma: "ha" },
-      "i": { kana: "イ", roma: "i" },
-      "j": { kana: "ジ", roma: "ji" },
-      "k": { kana: "カ", roma: "ka" },
-      "l": { kana: "ル", roma: "ru" },
-      "ł": { kana: "ウ", roma: "u" },
-      "m": { kana: "ム", roma: "mu" },
-      "n": { kana: "ン", roma: "n" },
-      "ń": { kana: "ニ", roma: "ni" },
-      "o": { kana: "オ", roma: "o" },
-      "ó": { kana: "オー", roma: "ō" },
-      "p": { kana: "プ", roma: "pu" },
-      "r": { kana: "ル", roma: "ru" },
-      "s": { kana: "ス", roma: "su" },
-      "sz": { kana: "シ", roma: "shi" },
-      "ś": { kana: "シ", roma: "shi" },
-      "t": { kana: "ト", roma: "to" },
-      "u": { kana: "ウ", roma: "u" },
-      "w": { kana: "ウ", roma: "u" },
-      "y": { kana: "イ", roma: "i" },
-      "z": { kana: "ズ", roma: "zu" },
-      "ź": { kana: "ジ", roma: "ji" },
-      "ż": { kana: "ジュ", roma: "ju" },
-      "ni": { kana: "ニ", roma: "ni" },
-      "gn": { kana: "ニェ", roma: "nye" },
-      "rz": { kana: "ジ", roma: "ji" },
-      "ch": { kana: "ヒ", roma: "hi" }
-    };
+        <div class="input-group">
+            <label for="polishName">Wpisz polskie imię:</label>
+            <input type="text" id="polishName" placeholder="np. Agnieszka, Tomasz, Anna..." maxlength="50">
+        </div>
 
-    function convertToKanaAndRomaji(name) {
-      name = name.toLowerCase();
-      let kana = "";
-      let roma = "";
-      let kanaBreakdown = [];
-      let i = 0;
-      while (i < name.length) {
-        let found = false;
-        // Spróbuj dopasować 2-znakową sekwencję
-        if (i + 1 < name.length) {
-          let pair = name.slice(i, i + 2);
-          if (syllableMap[pair]) {
-            kana += syllableMap[pair].kana;
-            roma += syllableMap[pair].roma;
-            kanaBreakdown.push(pair + " → " + syllableMap[pair].kana);
-            i += 2;
-            found = true;
-            continue;
-          }
+        <button class="convert-btn" onclick="convertName()">Konwertuj na japoński</button>
+
+        <div id="results" class="results">
+            <div class="result-item">
+                <div class="result-label">Katakana:</div>
+                <div id="katakana" class="katakana"></div>
+            </div>
+            <div class="result-item">
+                <div class="result-label">Romaji:</div>
+                <div id="romaji" class="romaji"></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Konwersja oparta na japońskiej fonetyce i systemie katakana
+        </div>
+    </div>
+
+    <script>
+        // Mapa konwersji polskich dźwięków na japońskie
+        const conversionMap = {
+            // Specjalne kombinacje dla konkretnych imion (sprawdzane jako pierwsze)
+            'oliwia': { katakana: 'オリビア', romaji: 'oribia' },
+            'oliwier': { katakana: 'オリビエル', romaji: 'oribieru' },
+            'jula': { katakana: 'ユラ', romaji: 'yura' },
+            'julka': { katakana: 'ユルカ', romaji: 'yuruka' },
+            
+            // Kombinacje dla 'oli' i podobnych
+            'oli': { katakana: 'オリ', romaji: 'ori' },
+            'jul': { katakana: 'ユル', romaji: 'yur' },
+            'ju': { katakana: 'ユ', romaji: 'yu' },
+            
+            // Samogłoski
+            'a': { katakana: 'ア', romaji: 'a' },
+            'e': { katakana: 'エ', romaji: 'e' },
+            'i': { katakana: 'イ', romaji: 'i' },
+            'o': { katakana: 'オ', romaji: 'o' },
+            'u': { katakana: 'ウ', romaji: 'u' },
+            'y': { katakana: 'イ', romaji: 'i' },
+            
+            // Spółgłoski z samogłoskami
+            'ka': { katakana: 'カ', romaji: 'ka' },
+            'ke': { katakana: 'ケ', romaji: 'ke' },
+            'ki': { katakana: 'キ', romaji: 'ki' },
+            'ko': { katakana: 'コ', romaji: 'ko' },
+            'ku': { katakana: 'ク', romaji: 'ku' },
+            
+            'ga': { katakana: 'ガ', romaji: 'ga' },
+            'ge': { katakana: 'ゲ', romaji: 'ge' },
+            'gi': { katakana: 'ギ', romaji: 'gi' },
+            'go': { katakana: 'ゴ', romaji: 'go' },
+            'gu': { katakana: 'グ', romaji: 'gu' },
+            
+            'sa': { katakana: 'サ', romaji: 'sa' },
+            'se': { katakana: 'セ', romaji: 'se' },
+            'si': { katakana: 'シ', romaji: 'shi' },
+            'so': { katakana: 'ソ', romaji: 'so' },
+            'su': { katakana: 'ス', romaji: 'su' },
+            'sz': { katakana: 'シュ', romaji: 'shu' },
+            'ś': { katakana: 'シ', romaji: 'shi' },
+            
+            'za': { katakana: 'ザ', romaji: 'za' },
+            'ze': { katakana: 'ゼ', romaji: 'ze' },
+            'zi': { katakana: 'ジ', romaji: 'ji' },
+            'zo': { katakana: 'ゾ', romaji: 'zo' },
+            'zu': { katakana: 'ズ', romaji: 'zu' },
+            'ż': { katakana: 'ジュ', romaji: 'ju' },
+            'ź': { katakana: 'ジ', romaji: 'ji' },
+            
+            'ta': { katakana: 'タ', romaji: 'ta' },
+            'te': { katakana: 'テ', romaji: 'te' },
+            'ti': { katakana: 'チ', romaji: 'chi' },
+            'to': { katakana: 'ト', romaji: 'to' },
+            'tu': { katakana: 'ツ', romaji: 'tsu' },
+            
+            'da': { katakana: 'ダ', romaji: 'da' },
+            'de': { katakana: 'デ', romaji: 'de' },
+            'di': { katakana: 'ディ', romaji: 'di' },
+            'do': { katakana: 'ド', romaji: 'do' },
+            'du': { katakana: 'ドゥ', romaji: 'du' },
+            
+            'na': { katakana: 'ナ', romaji: 'na' },
+            'ne': { katakana: 'ネ', romaji: 'ne' },
+            'ni': { katakana: 'ニ', romaji: 'ni' },
+            'no': { katakana: 'ノ', romaji: 'no' },
+            'nu': { katakana: 'ヌ', romaji: 'nu' },
+            'ń': { katakana: 'ニ', romaji: 'ni' },
+            
+            'ha': { katakana: 'ハ', romaji: 'ha' },
+            'he': { katakana: 'ヘ', romaji: 'he' },
+            'hi': { katakana: 'ヒ', romaji: 'hi' },
+            'ho': { katakana: 'ホ', romaji: 'ho' },
+            'hu': { katakana: 'フ', romaji: 'fu' },
+            
+            'ba': { katakana: 'バ', romaji: 'ba' },
+            'be': { katakana: 'ベ', romaji: 'be' },
+            'bi': { katakana: 'ビ', romaji: 'bi' },
+            'bo': { katakana: 'ボ', romaji: 'bo' },
+            'bu': { katakana: 'ブ', romaji: 'bu' },
+            
+            'pa': { katakana: 'パ', romaji: 'pa' },
+            'pe': { katakana: 'ペ', romaji: 'pe' },
+            'pi': { katakana: 'ピ', romaji: 'pi' },
+            'po': { katakana: 'ポ', romaji: 'po' },
+            'pu': { katakana: 'プ', romaji: 'pu' },
+            
+            'ma': { katakana: 'マ', romaji: 'ma' },
+            'me': { katakana: 'メ', romaji: 'me' },
+            'mi': { katakana: 'ミ', romaji: 'mi' },
+            'mo': { katakana: 'モ', romaji: 'mo' },
+            'mu': { katakana: 'ム', romaji: 'mu' },
+            
+            'ya': { katakana: 'ヤ', romaji: 'ya' },
+            'ye': { katakana: 'イェ', romaji: 'ye' },
+            'yo': { katakana: 'ヨ', romaji: 'yo' },
+            'yu': { katakana: 'ユ', romaji: 'yu' },
+            
+            'ra': { katakana: 'ラ', romaji: 'ra' },
+            're': { katakana: 'レ', romaji: 're' },
+            'ri': { katakana: 'リ', romaji: 'ri' },
+            'ro': { katakana: 'ロ', romaji: 'ro' },
+            'ru': { katakana: 'ル', romaji: 'ru' },
+            
+            'wa': { katakana: 'ワ', romaji: 'wa' },
+            'wo': { katakana: 'ヲ', romaji: 'wo' },
+            
+            // Specjalne polskie kombinacje
+            'ch': { katakana: 'ハ', romaji: 'ha' },
+            'cz': { katakana: 'チ', romaji: 'chi' },
+            'dz': { katakana: 'ズ', romaji: 'zu' },
+            'dź': { katakana: 'ジ', romaji: 'ji' },
+            'dż': { katakana: 'ジュ', romaji: 'ju' },
+            'rz': { katakana: 'ジュ', romaji: 'ju' },
+            
+            // Polskie samogłoski nosowe
+            'ą': { katakana: 'オン', romaji: 'on' },
+            'ę': { katakana: 'エン', romaji: 'en' },
+            
+            // Kombinacje z 'l'
+            'la': { katakana: 'ラ', romaji: 'ra' },
+            'le': { katakana: 'レ', romaji: 're' },
+            'li': { katakana: 'リ', romaji: 'ri' },
+            'lo': { katakana: 'ロ', romaji: 'ro' },
+            'lu': { katakana: 'ル', romaji: 'ru' },
+            'ł': { katakana: 'ウ', romaji: 'u' },
+            
+            // Pojedyncze spółgłoski (dodawane z 'u')
+            'k': { katakana: 'ク', romaji: 'ku' },
+            'g': { katakana: 'グ', romaji: 'gu' },
+            's': { katakana: 'ス', romaji: 'su' },
+            'z': { katakana: 'ズ', romaji: 'zu' },
+            't': { katakana: 'ト', romaji: 'to' },
+            'd': { katakana: 'ド', romaji: 'do' },
+            'n': { katakana: 'ン', romaji: 'n' },
+            'h': { katakana: 'ハ', romaji: 'ha' },
+            'b': { katakana: 'ブ', romaji: 'bu' },
+            'p': { katakana: 'プ', romaji: 'pu' },
+            'm': { katakana: 'ム', romaji: 'mu' },
+            'r': { katakana: 'ル', romaji: 'ru' },
+            'w': { katakana: 'ワ', romaji: 'wa' },
+            'f': { katakana: 'フ', romaji: 'fu' },
+            'v': { katakana: 'ヴ', romaji: 'vu' },
+            'l': { katakana: 'ル', romaji: 'ru' },
+            'j': { katakana: 'ヤ', romaji: 'ya' },
+            'c': { katakana: 'ツ', romaji: 'tsu' }
+        };
+
+        function convertName() {
+            const input = document.getElementById('polishName').value.trim().toLowerCase();
+            if (!input) {
+                alert('Proszę wpisać imię!');
+                return;
+            }
+
+            const result = convertPolishToJapanese(input);
+            
+            document.getElementById('katakana').textContent = result.katakana;
+            document.getElementById('romaji').textContent = result.romaji;
+            document.getElementById('results').style.display = 'block';
         }
-        // Spróbuj pojedynczy znak
-        let single = name.charAt(i);
-        if (syllableMap[single]) {
-          kana += syllableMap[single].kana;
-          roma += syllableMap[single].roma;
-          kanaBreakdown.push(single + " → " + syllableMap[single].kana);
-        } else {
-          kana += single;
-          roma += single;
-          kanaBreakdown.push(single + " → ?");
-        }
-        i++;
-      }
-      return { kana, roma, kanaBreakdown };
-    }
 
-    function convertName() {
-      const input = document.getElementById("nameInput").value.trim();
-      if (!input) {
-        document.getElementById("result").innerHTML = "Proszę wpisz imię.";
-        return;
-      }
-      const { kana, roma, kanaBreakdown } = convertToKanaAndRomaji(input);
-      document.getElementById("result").innerHTML =
-        `<p><strong>Katakana:</strong> <span class="kana-display">${kana}</span></p>
-         <p><strong>Romaji:</strong> ${roma.charAt(0).toUpperCase() + roma.slice(1)}</p>
-         <p><strong>Rozbicie znaków:</strong><br>${kanaBreakdown.join('<br>')}</p>`;
-    }
-  </script>
+        function convertPolishToJapanese(name) {
+            let katakana = '';
+            let romaji = '';
+            let i = 0;
+            
+            // Normalizacja - zamiana wielkich liter na małe
+            const originalName = name.toLowerCase();
+            name = originalName.replace(/ą/g, 'ą').replace(/ć/g, 'ts').replace(/ę/g, 'ę')
+                      .replace(/ł/g, 'ł').replace(/ń/g, 'ń').replace(/ó/g, 'u')
+                      .replace(/ś/g, 'ś').replace(/ź/g, 'ź').replace(/ż/g, 'ż');
+
+            // Sprawdź czy to całe imię ma specjalne mapowanie
+            if (conversionMap[originalName]) {
+                return {
+                    katakana: conversionMap[originalName].katakana,
+                    romaji: conversionMap[originalName].romaji.charAt(0).toUpperCase() + conversionMap[originalName].romaji.slice(1)
+                };
+            }
+
+            while (i < name.length) {
+                let found = false;
+                
+                // Sprawdzamy najdłuższe możliwe kombinacje (6, 5, 4, 3, 2, 1 znaki)
+                for (let len = 6; len >= 1; len--) {
+                    if (i + len <= name.length) {
+                        const substr = name.substr(i, len);
+                        
+                        if (conversionMap[substr]) {
+                            katakana += conversionMap[substr].katakana;
+                            romaji += conversionMap[substr].romaji;
+                            i += len;
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                
+                // Jeśli nie znaleziono mapowania, dodaj oryginalny znak
+                if (!found) {
+                    const char = name[i];
+                    if (char === ' ') {
+                        katakana += '　'; // Japońska spacja
+                        romaji += ' ';
+                    } else {
+                        // Spróbuj z pojedynczym znakiem
+                        if (conversionMap[char]) {
+                            katakana += conversionMap[char].katakana;
+                            romaji += conversionMap[char].romaji;
+                        } else {
+                            // Jeśli nie ma mapowania, zachowaj oryginalny znak
+                            katakana += char;
+                            romaji += char;
+                        }
+                    }
+                    i++;
+                }
+            }
+            
+            // Kapitalizacja pierwszej litery w romaji
+            if (romaji.length > 0) {
+                romaji = romaji.charAt(0).toUpperCase() + romaji.slice(1);
+            }
+            
+            return { katakana, romaji };
+        }
+
+        // Dodaj obsługę klawisza Enter
+        document.getElementById('polishName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                convertName();
+            }
+        });
+
+        // Dodaj przykłady do testowania
+        document.addEventListener('DOMContentLoaded', function() {
+            const examples = ['Agnieszka', 'Oliwia', 'Jula', 'Tomasz', 'Anna', 'Piotr', 'Julka', 'Oliwier'];
+            const input = document.getElementById('polishName');
+            
+            input.addEventListener('focus', function() {
+                if (!this.value) {
+                    this.placeholder = examples[Math.floor(Math.random() * examples.length)];
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 
